@@ -1,6 +1,6 @@
 module message;
 
-import hunt.stream.messagecoder;
+import neton.messagecoder;
 
 import std.bitmanip;
 import std.stdio;

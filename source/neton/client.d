@@ -12,7 +12,7 @@ import neton.context : ConsolePipeLine;
 public import neton.fieldframe;
 public import neton.messagecoder;
 
-abstract class StreamClient(bool litteEndian = false) :  HandlerAdapter!(Message)
+abstract class Client(bool litteEndian = false) :  HandlerAdapter!(Message)
 {
     this(EventLoop loop)
     {

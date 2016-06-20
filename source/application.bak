@@ -266,3 +266,51 @@ private:
     ConsoleRouter _router;
     Server _server;
 }
+
+
+
+/*
+void main()
+{
+        writeln("Edit source/app.d to start your project.");
+        StreamApplication!false  server = new StreamApplication!false ();
+        server.addRouter(MSGType.BEAT.stringof,toDelegate(&handleBeat));
+        server.addRouter(,toDelegate(&handleData),new MiddlewareFactroy());
+        server.addRouter("TimeOut",delegate(NetContext ctx,Message){
+            writeln("Time out !@!!");
+            ctx.close();
+        });
+        server.addRouter("TransportActive",delegate(NetContext ctx,Message){
+            writeln("new connect start.");
+            Variant tmp = Clock.currTime();
+            ctx.setData(tmp);
+        });
+        server.addRouter("TransportInActive",delegate(NetContext ctx,Message){
+            auto date = ctx.data.get!SysTime();
+            writeln("connect closed!, the connect time is : ",date);
+        });
+        server.heartbeatTimeOut(120).bind(8094);
+        server.setMessageDcoder(new MyDecode());
+        server.group(new EventLoopGroup());
+        server.run();
+}*/
+/*
+
+class MiddlewareFactroy : StreamApplication!(false).RouterPipelineFactory
+{
+    override StreamApplication!(false).RouterPipeline newPipeline()
+    {
+        auto pipe  =  new StreamApplication!(false).RouterPipeline;
+        pipe.addHandler(new Middleware());
+        return pipe;
+    }
+}
+
+class Middleware : StreamApplication!(false).MiddleWare
+{
+    override void handle(Context ctx, NetContext res,Message req)
+    {
+        writeln("\t\tMiddleware : StreamApplication!(false).MiddleWare");
+        ctx.next(res,req);
+    }
+}*/

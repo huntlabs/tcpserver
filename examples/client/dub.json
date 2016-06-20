@@ -5,8 +5,8 @@
 	"authors": ["dsby"],
 	"sourcePaths":["source","../common"],
 	"dependencies": {
-            "hunt" : {
-                "path" : "../../../"
+            "neton" : {
+                "path" : "../../"
             }
 	}
 }

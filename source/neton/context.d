@@ -57,7 +57,7 @@ class ContexHandler(ConsoleApplication) : HandlerAdapter!(Message)
     final override void read(Context ctx, Message msg)
     {
         ConsoleApplication app = cast(ConsoleApplication)_app;
-        auto cback = app.streamCallBack();
+        auto cback = app.callBack();
         cback(_cctx,msg);
     }
     

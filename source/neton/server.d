@@ -25,10 +25,10 @@ public import neton.context;
 public import neton.fieldframe;
 public import neton.messagecoder;
 
-final class StreamServer(bool litteEndian)
+final class Server(bool litteEndian)
 {
-    alias Contex = ConsoleContext!(StreamServer!litteEndian);
-    alias StreamCallBack = void delegate(Contex,Message);
+    alias Contex = ConsoleContext!(Server!litteEndian);
+    alias CallBack = void delegate(Contex,Message);
     
     enum LittleEndian = litteEndian;
     /// default Constructor
@@ -45,7 +45,7 @@ final class StreamServer(bool litteEndian)
     this(EventLoop loop)
     {
         _server = new ServerBootstrap!ConsolePipeLine(loop);
-        _server.childPipeline(new shared ConsolePipeLineFactory!(StreamServer!litteEndian)(this));
+        _server.childPipeline(new shared ConsolePipeLineFactory!(Server!litteEndian)(this));
         _server.setReusePort(true);
         _crypt =  new NoCrypt();
     }
@@ -147,13 +147,13 @@ final class StreamServer(bool litteEndian)
         return this;
     }
     
-    auto setCallBack(StreamCallBack cback)
+    auto setCallBack(CallBack cback)
     {
 	_callBack = cback;
 	return this;
     }
     
-    @property streamCallBack(){return _callBack;}
+    @property callBack(){return _callBack;}
    
     @property maxPackSize() const shared {return _maxPackSize;}
     @property compressType() const shared {return _comType;}
@@ -183,7 +183,7 @@ final class StreamServer(bool litteEndian)
     }
     
 private:
-    StreamCallBack _callBack;
+    CallBack _callBack;
     ServerBootstrap!ConsolePipeLine _server;
 private:
     uint _maxPackSize = 16 * 1024;

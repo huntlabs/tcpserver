@@ -4,59 +4,59 @@ import std.datetime;
 import std.variant;
 
 import collie.socket.eventloopgroup;
-import hunt.application.stream;
-import hunt.stream.messagecoder;
+import neton.server;
+import neton.messagecoder;
 import message;
 
-
-alias RPCContext = StreamApplication!(false).Contex;
+alias NetServer = Server!false;
+alias NetContext = NetServer.Contex;
 
 void main()
 {
-	writeln("Edit source/app.d to start your project.");
-	StreamApplication!false  server = new StreamApplication!false ();
-	server.addRouter(MSGType.BEAT.stringof,toDelegate(&handleBeat));
-	server.addRouter(MSGType.DATA.stringof,toDelegate(&handleData),new MiddlewareFactroy());
-	server.addRouter("TimeOut",delegate(RPCContext ctx,Message){
+    auto server = new NetServer();
+    server.setCallBack(toDelegate(&handle));
+    server.heartbeatTimeOut(120).bind(8094);
+    server.setMessageDcoder(new MyDecode());
+    server.group(new EventLoopGroup());
+    server.run();
+}
+
+void handle(NetContext ctx,Message msg )
+{
+    switch(msg.type())
+    {
+        case "TimeOut" : 
             writeln("Time out !@!!");
             ctx.close();
-	});
-	server.addRouter("TransportActive",delegate(RPCContext ctx,Message){
+            break;
+        case "TransportActive" :
+            {
             writeln("new connect start.");
             Variant tmp = Clock.currTime();
             ctx.setData(tmp);
-        });
-        server.addRouter("TransportInActive",delegate(RPCContext ctx,Message){
+            }
+            break;
+        case "TransportInActive" :
+            {
             auto date = ctx.data.get!SysTime();
             writeln("connect closed!, the connect time is : ",date);
-        });
-	server.heartbeatTimeOut(120).bind(8094);
-	server.setMessageDcoder(new MyDecode());
-	server.group(new EventLoopGroup());
-	server.run();
-}
-
-
-class MiddlewareFactroy : StreamApplication!(false).RouterPipelineFactory
-{
-    override StreamApplication!(false).RouterPipeline newPipeline()
-    {
-        auto pipe  =  new StreamApplication!(false).RouterPipeline;
-        pipe.addHandler(new Middleware());
-        return pipe;
+            }
+            break;
+        case MSGType.DATA.stringof :
+            handleData(forward!(ctx,msg));
+            break;
+        case MSGType.BEAT.stringof :
+            handleBeat(forward!(ctx,msg));
+            break;
+        default :
+            writeln("Unknow Message Type will close the link!");
+            ctx.close();
+            break;
     }
 }
 
-class Middleware : StreamApplication!(false).MiddleWare
-{
-    override void handle(Context ctx, RPCContext res,Message req)
-    {
-        writeln("\t\tMiddleware : StreamApplication!(false).MiddleWare");
-        ctx.next(res,req);
-    }
-}
 
-void handleData(RPCContext ctx,Message msg )
+void handleData(NetContext ctx,Message msg )
 {
     DataMessage mmsg = cast(DataMessage)msg;
     if(mmsg is null)
@@ -92,7 +92,7 @@ void handleData(RPCContext ctx,Message msg )
     ctx.write(mmsg);
 }
 
-void handleBeat(RPCContext ctx,Message msg)
+void handleBeat(NetContext ctx,Message msg)
 {
     BeatMessage mmsg = cast(BeatMessage)msg;
     writeln("\nHeatbeat: data : " , cast(string)mmsg.data);
