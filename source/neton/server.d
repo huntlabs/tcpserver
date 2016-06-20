@@ -9,7 +9,7 @@
  *
  */
 
-module hunt.stream.server;
+module neton.server;
 
 public import std.socket;
 public import std.experimental.logger;
@@ -21,10 +21,9 @@ public import collie.socket.eventloop;
 public import collie.socket.eventloopgroup;
 public import collie.channel;
 
-public import hunt.stream.context;
-public import hunt.stream.fieldframe;
-public import hunt.stream.messagecoder;
-import hunt.web.router;
+public import neton.context;
+public import neton.fieldframe;
+public import neton.messagecoder;
 
 final class StreamServer(bool litteEndian)
 {

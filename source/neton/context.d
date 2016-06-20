@@ -9,7 +9,7 @@
  *
  */
 
-module hunt.stream.context;
+module neton.context;
 
 import std.variant;
 
@@ -17,8 +17,7 @@ import collie.channel.handler;
 import collie.channel.handlercontext;
 import collie.channel.pipeline;
 
-import hunt.stream.messagecoder;
-import hunt.routing;
+import neton.messagecoder;
 
 alias ConsolePipeLine = Pipeline!(ubyte[],Message);
 

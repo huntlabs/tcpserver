@@ -9,7 +9,7 @@
  *
  */
 
-module hunt.utils.lzmahandle;
+module neton.utils.lzmahandle;
 
 version(LZMA_COMPRESS) import deimos.lzma;
 

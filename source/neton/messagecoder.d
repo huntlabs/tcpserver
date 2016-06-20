@@ -9,7 +9,7 @@
  *
  */
  
-module hunt.stream.messagecoder;
+module neton.messagecoder;
 
 import std.bitmanip;
 import std.experimental.logger;

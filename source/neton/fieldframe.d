@@ -9,13 +9,13 @@
  *
  */
 
-module hunt.stream.fieldframe;
+module neton.fieldframe;
 
 import std.zlib;
 import std.experimental.logger;
 
 import collie.codec.lengthfieldbasedframe;
-import hunt.utils.lzmahandle;
+import neton.utils.lzmahandle;
 
 enum CompressType : ubyte
 {

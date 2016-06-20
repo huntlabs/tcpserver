@@ -1,4 +1,4 @@
-module hunt.stream.client;
+module neton.client;
 
 public import std.socket;
 public import std.experimental.logger;
@@ -8,9 +8,9 @@ import collie.bootstrap.client;
 public import collie.socket.eventloop;
 public import collie.channel;
 
-import hunt.stream.context : ConsolePipeLine;
-public import hunt.stream.fieldframe;
-public import hunt.stream.messagecoder;
+import neton.context : ConsolePipeLine;
+public import neton.fieldframe;
+public import neton.messagecoder;
 
 abstract class StreamClient(bool litteEndian = false) :  HandlerAdapter!(Message)
 {
