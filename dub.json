@@ -1,8 +1,9 @@
 {
 	"name": "neton",
-	"description": "A minimal D application.",
-	"copyright": "Copyright © 2016, dsby",
-	"authors": ["dsby"],
+	"description": "A library of TCP and RPC based on collie + flatbuffers.",
+	"copyright": "Copyright © 2016 putao.com",
+	"authors": ["putao.com dlang team"],
+	"license": "BSD",
 	"dependencies": {
                 "collie": {
                     "version"      : "~>0.6.4",
