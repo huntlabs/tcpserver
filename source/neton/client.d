@@ -65,7 +65,7 @@ abstract class Client(bool litteEndian = false) :  HandlerAdapter!(Message)
         return this;
     }
    
-    auto setMessageDcoder(shared MessageDecode dcode)
+    auto setMessageDecoder(shared MessageDecode dcode)
     in{
         assert(dcode);
     }body{
@@ -80,23 +80,23 @@ abstract class Client(bool litteEndian = false) :  HandlerAdapter!(Message)
     @property decoder() {return pipelineFactroy.decoder;}
     
     pragma(inline)
-    final void doWrite(Message msg, void delegate(Message,uint) cback = null)
+    final void send(Message msg, void delegate(Message,uint) cback = null)
     {
         context().fireWrite(msg,cback);
     }
     
     pragma(inline)
-    final void doClose()
+    final void disconnect()
     {
         context().fireClose();
     }
     
     @property EventLoop eventLoop(){return _client.eventLoop();}
 protected:
-    void onRead(Message msg);
+    void onMessage(Message msg);
     void onTimeOut();
-    void onActive();
-    void onUnactive();
+    void onConnect();
+    void onDisConnect();
     
     final void deleteMsg(Message msg, uint len)
     {
@@ -110,17 +110,17 @@ protected:
 public:
     final override void transportActive(Context ctx){
         trace("transportActive");
-        onActive();
+        onConnect();
     }
     final override void transportInactive(Context ctx){
         trace("transportInactive");
-        onUnactive();
+        onDisConnect();
     }
     final override void timeOut(Context ctx){
         trace("timeOut");
         onTimeOut();
     }
-    final override void read(Context ctx, Message msg){trace("read");onRead(msg);}
+    final override void read(Context ctx, Message msg){trace("read");onMessage(msg);}
 private:
    final @property pipelineFactroy(){
         if(!_pipelineFactroy) {

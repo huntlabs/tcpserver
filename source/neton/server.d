@@ -14,6 +14,7 @@ module neton.server;
 public import std.socket;
 public import std.experimental.logger;
 import std.conv;
+import std.parallelism : totalCPUs;
 
 import collie.bootstrap.server;
 import collie.bootstrap.serversslconfig;
@@ -61,11 +62,13 @@ final class Server(bool litteEndian)
     } 
     
     /**
-        Set the EventLoopGroup to used the multi-thread.
+        Set size to used the multi-thread.
     */
-    auto group(EventLoopGroup group)
+    auto setThreadSize(uint size = totalCPUs)
     {
-        _server.group(group);
+        size = size -1;
+        if(size > 0)
+            _server.group(new EventLoopGroup(size));
         return this;
     }
     

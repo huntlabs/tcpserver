@@ -17,7 +17,7 @@ void main()
     server.setCallBack(toDelegate(&handle));
     server.heartbeatTimeOut(120).bind(8094);
     server.setMessageDcoder(new MyDecode());
-    server.group(new EventLoopGroup());
+    server.setThreadSize();
     server.run();
 }
 
