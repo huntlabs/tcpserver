@@ -12,7 +12,7 @@ void main()
     MyClient client = new MyClient(loop);
     ushort port = cast(ushort)8094;
     stdo.writeln("port is  : ",port);
-    client.setMessageDcoder(new MyDecode());
+    client.setMessageDecoder(new MyDecode());
     client.heartbeatTimeOut(3).connect("127.0.0.1",port);
     
     loop.run();
@@ -26,7 +26,7 @@ class MyClient : Client!false
     }
     int i = 0;
 protected:
-    override void onRead(Message msg)
+    override void onMessage(Message msg)
     {
         switch(msg.type())
         {
@@ -61,7 +61,7 @@ protected:
                     
                     stdo.writeln(mmsg.svalue, "  =  ", mmsg.value);
                     if(i > 5)
-                        doClose();
+                        disconnect();
                 }
                 break;
             default:
@@ -74,7 +74,7 @@ protected:
         stdo.writeln("timeOut : senf heartbeatTimeOut");
         auto mg = new BeatMessage();
         mg.data = cast(ubyte[])"client";
-        doWrite(mg);
+        send(mg);
         
         ++i;
         
@@ -83,9 +83,9 @@ protected:
         mmsg.commod = cast(uint)(tm % 4);
         mmsg.fvalue = tm  / 50;
         mmsg.svalue = tm  / 300;
-        doWrite(mmsg); 
+        send(mmsg); 
     }
-    override void onActive()
+    override void onConnect()
     {
         stdo.writeln("connecd!");
        
@@ -95,10 +95,10 @@ protected:
         mmsg.commod = cast(uint)(tm % 4);
         mmsg.fvalue = tm  / 50;
         mmsg.svalue = tm  / 300;
-        doWrite(mmsg);
+        send(mmsg);
     }
     
-    override void onUnactive()
+    override void onDisConnect()
     {
         stdo.writeln("unactive!");
         eventLoop().stop();
